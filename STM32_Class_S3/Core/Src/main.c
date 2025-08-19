@@ -94,6 +94,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+				// LED ON
+		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,GPIO_PIN_RESET);
+		HAL_Delay(1000);
+		// LED OFF
+		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,GPIO_PIN_SET);
+		HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -159,9 +165,11 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
+	
   __disable_irq();
   while (1)
   {
+		
   }
   /* USER CODE END Error_Handler_Debug */
 }
