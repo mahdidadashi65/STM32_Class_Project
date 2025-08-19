@@ -70,9 +70,29 @@ void test_led_7seg_4x(void)
 }
 
 
+void test_read_key(void)
+{
+	
+	while(1)
+	{
+   if(HAL_GPIO_ReadPin(SW1_GPIO_Port, SW1_Pin)==0)
+	 {
+		 		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,GPIO_PIN_RESET);
+	 }
+	 else
+	 {
+		 		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,GPIO_PIN_SET);
+	 }
+		
+			
+		HAL_Delay(2000);
+	}
+}
+
 void myapp(void)
 {
 	//test_led_blink();
   //test_led_7seg_1x();
-	test_led_7seg_4x();
+	//test_led_7seg_4x();
+	test_read_key();
 }

@@ -67,6 +67,8 @@ void Error_Handler(void);
 #define SEGF_GPIO_Port GPIOE
 #define SEGG_Pin GPIO_PIN_6
 #define SEGG_GPIO_Port GPIOE
+#define SW1_Pin GPIO_PIN_0
+#define SW1_GPIO_Port GPIOA
 #define SEG1_Pin GPIO_PIN_10
 #define SEG1_GPIO_Port GPIOE
 #define SEG2_Pin GPIO_PIN_11
