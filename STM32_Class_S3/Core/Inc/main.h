@@ -57,8 +57,22 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SEGC_Pin GPIO_PIN_2
+#define SEGC_GPIO_Port GPIOE
+#define SEGD_Pin GPIO_PIN_3
+#define SEGD_GPIO_Port GPIOE
+#define SEGE_Pin GPIO_PIN_4
+#define SEGE_GPIO_Port GPIOE
+#define SEGF_Pin GPIO_PIN_5
+#define SEGF_GPIO_Port GPIOE
+#define SEGG_Pin GPIO_PIN_6
+#define SEGG_GPIO_Port GPIOE
 #define LED1_Pin GPIO_PIN_0
 #define LED1_GPIO_Port GPIOD
+#define SEGA_Pin GPIO_PIN_0
+#define SEGA_GPIO_Port GPIOE
+#define SEGB_Pin GPIO_PIN_1
+#define SEGB_GPIO_Port GPIOE
 
 /* USER CODE BEGIN Private defines */
 
