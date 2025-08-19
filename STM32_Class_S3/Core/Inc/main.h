@@ -67,6 +67,10 @@ void Error_Handler(void);
 #define SEGF_GPIO_Port GPIOE
 #define SEGG_Pin GPIO_PIN_6
 #define SEGG_GPIO_Port GPIOE
+#define SEG1_Pin GPIO_PIN_10
+#define SEG1_GPIO_Port GPIOE
+#define SEG2_Pin GPIO_PIN_11
+#define SEG2_GPIO_Port GPIOE
 #define LED1_Pin GPIO_PIN_0
 #define LED1_GPIO_Port GPIOD
 #define SEGA_Pin GPIO_PIN_0

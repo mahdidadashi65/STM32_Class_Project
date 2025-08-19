@@ -54,12 +54,17 @@ void MX_GPIO_Init(void)
                           |SEGG_Pin|SEGA_Pin|SEGB_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, SEG1_Pin|SEG2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pins : SEGC_Pin SEGD_Pin SEGE_Pin SEGF_Pin
-                           SEGG_Pin SEGA_Pin SEGB_Pin */
+                           SEGG_Pin SEG1_Pin SEG2_Pin SEGA_Pin
+                           SEGB_Pin */
   GPIO_InitStruct.Pin = SEGC_Pin|SEGD_Pin|SEGE_Pin|SEGF_Pin
-                          |SEGG_Pin|SEGA_Pin|SEGB_Pin;
+                          |SEGG_Pin|SEG1_Pin|SEG2_Pin|SEGA_Pin
+                          |SEGB_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
