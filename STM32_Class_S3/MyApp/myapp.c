@@ -89,10 +89,51 @@ void test_read_key(void)
 	}
 }
 
+void test_read_key_int(void)
+{
+	
+	while(1)
+	{
+		//HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+		HAL_Delay(2000);
+	}
+}
+
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if(GPIO_Pin == SW2_Pin)
+    {
+		 if(HAL_GPIO_ReadPin(SW2_GPIO_Port, SW2_Pin)==0)
+		 {
+					HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,GPIO_PIN_RESET);
+		 }
+		 else
+		 {
+					HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,GPIO_PIN_SET);
+		 }
+	 }
+		
+	     if(GPIO_Pin == SW3_Pin)
+    {
+		 if(HAL_GPIO_ReadPin(SW3_GPIO_Port, SW3_Pin)==0)
+		 {
+					HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin,GPIO_PIN_RESET);
+		 }
+		 else
+		 {
+					HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin,GPIO_PIN_SET);
+		 }
+	 }
+		
+}
+
+
 void myapp(void)
 {
 	//test_led_blink();
   //test_led_7seg_1x();
 	//test_led_7seg_4x();
-	test_read_key();
+	//test_read_key();
+	test_read_key_int();
 }
