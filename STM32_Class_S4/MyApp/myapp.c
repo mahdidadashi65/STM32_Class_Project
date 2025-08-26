@@ -1,7 +1,7 @@
 #include "myapp.h"
 #include "main.h"
 #include "gpio.h"
-
+#include "usart.h"
 #include "LCD16X2.h"
  
 #define MyLCD LCD16X2_1
@@ -150,9 +150,23 @@ void test_lcd_char(void)
 }
 
 
+void test_uart_send(void)
+{
+	
+	while(1)
+	{		
+		HAL_UART_Transmit(&huart2,(uint8_t*)"Hello\r\n",7,1000);
+		//HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
+		HAL_Delay(1000);
+	}
+}
+
+
 void myapp(void)
 {
 	//test_keypad();
 	//test_count_7seg();
-	test_lcd_char();
+	//test_lcd_char();
+	
+	test_uart_send();
 }
