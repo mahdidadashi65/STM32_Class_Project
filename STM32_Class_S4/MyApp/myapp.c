@@ -55,12 +55,40 @@ void show_seg(uint8_t num)
 			HAL_GPIO_WritePin(SEGA_GPIO_Port,SEGA_Pin|SEGE_Pin|SEGF_Pin|SEGG_Pin,1);
 	}
 	
-	
 }
 
-int8_t scan_keypad()
+int8_t scan_keypad(void)
 {
 	int8_t key=-1;
+	
+	HAL_GPIO_WritePin(KP_R0_GPIO_Port,KP_R0_Pin|KP_R1_Pin|KP_R2_Pin|KP_R3_Pin,1);
+	HAL_GPIO_WritePin(KP_R0_GPIO_Port,KP_R0_Pin,0);
+	if     (HAL_GPIO_ReadPin(KP_C0_GPIO_Port,KP_C0_Pin) == 0)key=7;
+	else if(HAL_GPIO_ReadPin(KP_C1_GPIO_Port,KP_C1_Pin) == 0)key=8;
+	else if(HAL_GPIO_ReadPin(KP_C2_GPIO_Port,KP_C2_Pin) == 0)key=9;
+	else if(HAL_GPIO_ReadPin(KP_C3_GPIO_Port,KP_C3_Pin) == 0)key=10;
+	
+	HAL_GPIO_WritePin(KP_R0_GPIO_Port,KP_R0_Pin|KP_R1_Pin|KP_R2_Pin|KP_R3_Pin,1);
+	HAL_GPIO_WritePin(KP_R1_GPIO_Port,KP_R1_Pin,0);
+	if     (HAL_GPIO_ReadPin(KP_C0_GPIO_Port,KP_C0_Pin) == 0)key=4;
+	else if(HAL_GPIO_ReadPin(KP_C1_GPIO_Port,KP_C1_Pin) == 0)key=5;
+	else if(HAL_GPIO_ReadPin(KP_C2_GPIO_Port,KP_C2_Pin) == 0)key=6;
+	else if(HAL_GPIO_ReadPin(KP_C3_GPIO_Port,KP_C3_Pin) == 0)key=11;
+	
+	
+	HAL_GPIO_WritePin(KP_R0_GPIO_Port,KP_R0_Pin|KP_R1_Pin|KP_R2_Pin|KP_R3_Pin,1);
+	HAL_GPIO_WritePin(KP_R2_GPIO_Port,KP_R2_Pin,0);
+	if     (HAL_GPIO_ReadPin(KP_C0_GPIO_Port,KP_C0_Pin) == 0)key=1;
+	else if(HAL_GPIO_ReadPin(KP_C1_GPIO_Port,KP_C1_Pin) == 0)key=2;
+	else if(HAL_GPIO_ReadPin(KP_C2_GPIO_Port,KP_C2_Pin) == 0)key=3;
+	else if(HAL_GPIO_ReadPin(KP_C3_GPIO_Port,KP_C3_Pin) == 0)key=12;
+	
+	HAL_GPIO_WritePin(KP_R0_GPIO_Port,KP_R0_Pin|KP_R1_Pin|KP_R2_Pin|KP_R3_Pin,1);
+	HAL_GPIO_WritePin(KP_R3_GPIO_Port,KP_R3_Pin,0);
+	if     (HAL_GPIO_ReadPin(KP_C0_GPIO_Port,KP_C0_Pin) == 0)key=13;
+	else if(HAL_GPIO_ReadPin(KP_C1_GPIO_Port,KP_C1_Pin) == 0)key=0;
+	else if(HAL_GPIO_ReadPin(KP_C2_GPIO_Port,KP_C2_Pin) == 0)key=14;
+	else if(HAL_GPIO_ReadPin(KP_C3_GPIO_Port,KP_C3_Pin) == 0)key=15;
 	
 	return key;
 }
@@ -97,6 +125,6 @@ void test_count_7seg(void)
 
 void myapp(void)
 {
-	//test_keypad();
-	test_count_7seg();
+	test_keypad();
+	//test_count_7seg();
 }
