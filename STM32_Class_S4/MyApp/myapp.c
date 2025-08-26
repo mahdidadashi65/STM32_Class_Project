@@ -2,7 +2,9 @@
 #include "main.h"
 #include "gpio.h"
 
-
+#include "LCD16X2.h"
+ 
+#define MyLCD LCD16X2_1
 
 
 
@@ -122,9 +124,35 @@ void test_count_7seg(void)
 	}
 }
 
+void test_lcd_char(void)
+{
+	
+	  LCD16X2_Init(MyLCD);
+    LCD16X2_Clear(MyLCD);
+    LCD16X2_Set_Cursor(MyLCD, 1, 1);
+    LCD16X2_Write_String(MyLCD, "  Meco");
+    LCD16X2_Set_Cursor(MyLCD, 2, 1);
+    LCD16X2_Write_String(MyLCD, "STM32 Course");
+	
+	while(1)
+	{		
+
+		    LCD16X2_SR(MyLCD);  HAL_Delay(450);
+        LCD16X2_SR(MyLCD);  HAL_Delay(450);
+        LCD16X2_SR(MyLCD);  HAL_Delay(450);
+        LCD16X2_SR(MyLCD);  HAL_Delay(450);
+ 
+        LCD16X2_SL(MyLCD);  HAL_Delay(450);
+        LCD16X2_SL(MyLCD);  HAL_Delay(450);
+        LCD16X2_SL(MyLCD);  HAL_Delay(450);
+        LCD16X2_SL(MyLCD);  HAL_Delay(450);
+	}
+}
+
 
 void myapp(void)
 {
-	test_keypad();
+	//test_keypad();
 	//test_count_7seg();
+	test_lcd_char();
 }

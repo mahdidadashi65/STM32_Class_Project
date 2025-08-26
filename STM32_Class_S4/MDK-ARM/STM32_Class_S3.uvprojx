@@ -504,6 +504,21 @@
               <FileType>1</FileType>
               <FilePath>..\MyApp\myapp.c</FilePath>
             </File>
+            <File>
+              <FileName>LCD16X2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MyApp\LCD16X2.c</FilePath>
+            </File>
+            <File>
+              <FileName>LCD16X2_cfg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MyApp\LCD16X2_cfg.c</FilePath>
+            </File>
+            <File>
+              <FileName>Util.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MyApp\Util.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
