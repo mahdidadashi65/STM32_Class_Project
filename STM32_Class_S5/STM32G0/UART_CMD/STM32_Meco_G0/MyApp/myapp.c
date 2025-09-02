@@ -3,7 +3,9 @@
 #include "gpio.h"
 #include "usart.h"
 #include <stdio.h>
+#include <string.h>
 
+#include <ctype.h>
 
 #define RXBUFFERSIZE 10
 /* Buffer used for reception */
@@ -16,7 +18,7 @@ uint8_t data0=1;
 uint8_t rx_buffer3[MAX_RX3_SIZE];
 uint8_t rx_counter3=0;
 
-
+void cmd_parser(uint8_t len,uint8_t* cmd);
 
 #ifdef __GNUC__
 /* With GCC, small printf (option LD Linker->Libraries->Small printf
@@ -147,7 +149,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 
   if(rx_buffer3[rx_counter3]==  '\n')
   {
-    printf("New CMD: %d %x %x %s\r\n",rx_counter3 , rx_buffer3[0],rx_buffer3[rx_counter3-1],rx_buffer3);
+    cmd_parser(rx_counter3,rx_buffer3);
     rx_counter3=0;
   }
 
@@ -159,6 +161,34 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
     Error_Handler();
   }
   
+}
+
+
+void cmd_parser(uint8_t len,uint8_t* cmd)
+{
+  printf("New CMD: %d %x %x %s\r\n",len , cmd[0],cmd[len-1],cmd);
+  
+  uint8_t cmd2[100];
+  
+  for(int i=0; i<len;i++)
+  {
+    cmd2[i]=toupper(cmd[i]);
+  }
+  
+
+    if (strstr((const char*)cmd2, "ON") != NULL) 
+  {
+      HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin,GPIO_PIN_SET);
+      printf("LED ON\r\n");
+  }
+  
+
+  
+   if (strstr((const char*)cmd2, "OFF") != NULL) 
+  {
+      HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin,GPIO_PIN_RESET);
+      printf("LED OFF\r\n");
+  }
 }
 
 void test_read_read_uart_interrupt2(void)
