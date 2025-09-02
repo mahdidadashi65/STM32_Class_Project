@@ -11,6 +11,10 @@ uint8_t aRxBuffer_it[RXBUFFERSIZE];
 __IO ITStatus UartReady = RESET;
 
 
+#define MAX_RX3_SIZE 100
+uint8_t data0=1;
+uint8_t rx_buffer3[MAX_RX3_SIZE];
+uint8_t rx_counter3=0;
 
 
 
@@ -104,16 +108,17 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle)
   Error_Handler();
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
-{
-  /* Set transmission flag: transfer complete */
-  UartReady = SET;
-}
+
+// sample1
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
+//{
+//  /* Set transmission flag: transfer complete */
+//  UartReady = SET;
+//}
+
 
 void test_read_read_uart_interrupt(void)
-{	 
-  HAL_StatusTypeDef status;
-  
+{	   
   if (HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer_it, RXBUFFERSIZE) != HAL_OK)
   {
     Error_Handler();
@@ -135,12 +140,48 @@ void test_read_read_uart_interrupt(void)
 	}
 }
 
+//sample2
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
+{ 
+  rx_buffer3[rx_counter3]=data0;
+
+  if(rx_buffer3[rx_counter3]==  '\n')
+  {
+    printf("New CMD: %d %x %x %s\r\n",rx_counter3 , rx_buffer3[0],rx_buffer3[rx_counter3-1],rx_buffer3);
+    rx_counter3=0;
+  }
+
+  rx_counter3++;
+  if(rx_counter3>MAX_RX3_SIZE)rx_counter3=0;
+
+  if (HAL_UART_Receive_IT(&huart1, (uint8_t *)&data0, 1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  
+}
+
+void test_read_read_uart_interrupt2(void)
+{	   
+  if (HAL_UART_Receive_IT(&huart1, (uint8_t *)&data0, 1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  
+	while(1)
+	{
+    HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);  
+		HAL_Delay(100);
+	}
+}
+
 void myapp(void)
 {
+  printf("Start App\r\n");
 	//test_led_blink();
 	//test_read_key();
   //test_read_send_uart();
   //test_read_read_uart_polling();
-  test_read_read_uart_interrupt();
-
+  //test_read_read_uart_interrupt();
+  test_read_read_uart_interrupt2();
 }
