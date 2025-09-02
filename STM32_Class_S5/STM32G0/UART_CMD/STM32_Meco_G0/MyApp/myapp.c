@@ -4,6 +4,16 @@
 #include "usart.h"
 #include <stdio.h>
 
+
+#define RXBUFFERSIZE 10
+/* Buffer used for reception */
+uint8_t aRxBuffer_it[RXBUFFERSIZE];
+__IO ITStatus UartReady = RESET;
+
+
+
+
+
 #ifdef __GNUC__
 /* With GCC, small printf (option LD Linker->Libraries->Small printf
    set to 'Yes') calls __io_putchar() */
@@ -89,13 +99,48 @@ void test_read_read_uart_polling(void)
 	}
 }
 
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle)
+{
+  Error_Handler();
+}
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
+{
+  /* Set transmission flag: transfer complete */
+  UartReady = SET;
+}
+
+void test_read_read_uart_interrupt(void)
+{	 
+  HAL_StatusTypeDef status;
+  
+  if (HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer_it, RXBUFFERSIZE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  
+	while(1)
+	{
+    if(UartReady == SET)
+    {
+      UartReady = RESET;
+      printf("Data:%x\r\n",aRxBuffer_it[0]);
+      if (HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer_it, RXBUFFERSIZE) != HAL_OK)
+      {
+        Error_Handler();
+      }      
+    }
+    HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);  
+		HAL_Delay(100);
+	}
+}
 
 void myapp(void)
 {
 	//test_led_blink();
 	//test_read_key();
   //test_read_send_uart();
-  test_read_read_uart_polling();
+  //test_read_read_uart_polling();
+  test_read_read_uart_interrupt();
 
 }
