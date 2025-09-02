@@ -4,13 +4,16 @@
 #include "usart.h"
 #include <stdio.h>
 #include <string.h>
-
 #include <ctype.h>
+#include <stdlib.h>
 
 #define RXBUFFERSIZE 10
 /* Buffer used for reception */
 uint8_t aRxBuffer_it[RXBUFFERSIZE];
 __IO ITStatus UartReady = RESET;
+
+
+#define uart_cmd huart1
 
 
 #define MAX_RX3_SIZE 100
@@ -164,6 +167,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 }
 
 
+int val=100;
+
 void cmd_parser(uint8_t len,uint8_t* cmd)
 {
   printf("New CMD: %d %x %x %s\r\n",len , cmd[0],cmd[len-1],cmd);
@@ -189,6 +194,67 @@ void cmd_parser(uint8_t len,uint8_t* cmd)
       HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin,GPIO_PIN_RESET);
       printf("LED OFF\r\n");
   }
+  
+  char* cmd_pwm="PWM";
+  if (strstr((const char*)cmd2, cmd_pwm) != NULL) 
+  {
+    int pwm_val=0;
+    char* pwm_loc=0;
+    pwm_loc = strstr((const char*)cmd2, cmd_pwm);
+    pwm_val = atoi(pwm_loc+strlen(cmd_pwm));
+    printf("pwm: %d\r\n",pwm_val);
+  }
+  
+    char* led_pwm="LED";
+  if (strstr((const char*)cmd2, led_pwm) != NULL) 
+  {
+    int pwm_val=0;
+    char* pwm_loc=0;
+    pwm_loc = strstr((const char*)cmd2, led_pwm);
+    pwm_val = atoi(pwm_loc+strlen(led_pwm));
+    printf("led: %d\r\n",pwm_val);
+  }
+  
+  
+  char* led_flt="FLT";
+  if (strstr((const char*)cmd2, led_flt) != NULL) 
+  {
+    float pwm_val=0;
+    char* pwm_loc=0;
+    pwm_loc = strstr((const char*)cmd2, led_flt);
+    pwm_val = atoi(pwm_loc+strlen(led_flt));
+    printf("flt: %.2f\r\n",pwm_val/100);
+  }
+  
+  
+  
+  char* cmd_out="OUT";
+  if (strstr((const char*)cmd2, cmd_out) != NULL) 
+  {
+    int pwm_val=0;
+    char* pwm_loc=0;
+    pwm_loc = strstr((const char*)cmd2, cmd_out);
+    pwm_val = atoi(pwm_loc+strlen(cmd_out));
+    printf("cmd_out: %d\r\n",pwm_val);
+    // write out val to port
+  }
+  
+  char* cmd_in="INP";
+  if (strstr((const char*)cmd2, cmd_in) != NULL) 
+  {
+//    int pwm_val=0;
+//    char* pwm_loc=0;
+//    pwm_loc = strstr((const char*)cmd2, cmd_in);
+//    pwm_val = atoi(pwm_loc+strlen(cmd_in));
+//    printf("val_in: %d\r\n",pwm_val);
+    
+    //read in val from port
+    uint8_t port_in_val=val++;
+    char buffer[100];
+    sprintf(buffer,"PORT IN:%d\r\n",port_in_val);
+    HAL_UART_Transmit(&uart_cmd,(const uint8_t*)buffer,strlen(buffer),100);
+  }
+  
 }
 
 void test_read_read_uart_interrupt2(void)
