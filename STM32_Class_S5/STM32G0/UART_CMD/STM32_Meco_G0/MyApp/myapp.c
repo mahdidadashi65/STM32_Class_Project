@@ -7,6 +7,9 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+#include <i2c.h>
+
+
 #define RXBUFFERSIZE 10
 /* Buffer used for reception */
 uint8_t aRxBuffer_it[RXBUFFERSIZE];
@@ -271,6 +274,45 @@ void test_read_read_uart_interrupt2(void)
 	}
 }
 
+//***************
+#define EEPROM_ADDRESS          0xA0   /* Address A0 == MB1020 A-01 - Address A6 == MB1020 A-02 */
+#define EEPROM_PAGESIZE         4     /* RF EEPROM ANT7-M24LR used */
+
+void test_read_eeprom(void)
+{
+
+  #define I2C_RXBUFFERSIZE 40
+  /* Buffer used for transmission */
+uint8_t aTxBuffer[] = "test data";
+
+/* Buffer used for reception */
+uint8_t aRxBuffer[I2C_RXBUFFERSIZE];
+
+/* Useful variables during communication */
+uint16_t Memory_Address=0;
+  
+//      /* Write EEPROM_PAGESIZE */
+//  if(HAL_I2C_Mem_Write(&hi2c1 , (uint16_t)EEPROM_ADDRESS, Memory_Address, I2C_MEMADD_SIZE_16BIT, (uint8_t*)(aTxBuffer + Memory_Address), EEPROM_PAGESIZE,500)!= HAL_OK)
+//  {
+//    /* Writing process Error */
+//    Error_Handler();
+//  }
+
+
+  /*##-3- Start reading process ##############################################*/
+  if (HAL_I2C_Mem_Read(&hi2c1, (uint16_t)EEPROM_ADDRESS, 0, I2C_MEMADD_SIZE_16BIT, (uint8_t *)aRxBuffer, I2C_RXBUFFERSIZE,500) != HAL_OK)
+  {
+    /* Reading process Error */
+    Error_Handler();
+  }
+  while(1)
+	{
+    HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);  
+		HAL_Delay(100);
+	}
+  
+}
+
 void myapp(void)
 {
   printf("Start App\r\n");
@@ -279,5 +321,8 @@ void myapp(void)
   //test_read_send_uart();
   //test_read_read_uart_polling();
   //test_read_read_uart_interrupt();
-  test_read_read_uart_interrupt2();
+  //test_read_read_uart_interrupt2();
+  
+  
+  test_read_eeprom();
 }
