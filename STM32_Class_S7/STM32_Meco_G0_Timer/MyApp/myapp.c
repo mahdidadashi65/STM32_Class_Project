@@ -337,8 +337,15 @@ void __aeabi_assert (const char *expr, const char *file, int line)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+  if(htim == &htim14)
+  {
     HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
     HAL_GPIO_TogglePin(SSEL_GPIO_Port,SSEL_Pin);
+  }
+  else if (htim == &htim2)
+  {
+    HAL_GPIO_TogglePin(PA0_GPIO_Port,PA0_Pin);
+  }
 
 }
 
@@ -347,10 +354,11 @@ void timer_test1(void)
 {
     
    HAL_TIM_Base_Start_IT(&htim14);
-   __HAL_TIM_SetAutoreload(&htim14,50-1);
-
-   
+   __HAL_TIM_SetAutoreload(&htim14,500-1);
   
+  HAL_TIM_Base_Start_IT(&htim2);
+   __HAL_TIM_SetAutoreload(&htim2,1000-1);
+
   while(1)
   {
       HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
