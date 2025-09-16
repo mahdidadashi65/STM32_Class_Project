@@ -347,8 +347,10 @@ void timer_test1(void)
 {
     
    HAL_TIM_Base_Start_IT(&htim14);
-   
+   __HAL_TIM_SetAutoreload(&htim14,50-1);
 
+   
+  
   while(1)
   {
       HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
