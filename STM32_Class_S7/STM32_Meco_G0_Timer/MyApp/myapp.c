@@ -38,7 +38,7 @@ int fputc(int ch, FILE *f)
 {
   /* Place your implementation of fputc here */
   /* e.g. write a character to the USART1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, 0xFFFF);
+//  HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, 0xFFFF);
 
   return ch;
 }
@@ -87,7 +87,7 @@ void test_read_send_uart(void)
 	{
        
     HAL_UART_Transmit(&huart1,"UART1\r\n",7,100);
-    HAL_UART_Transmit(&huart3,"UART3\r\n",7,100);
+//    HAL_UART_Transmit(&huart3,"UART3\r\n",7,100);
     HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
     printf("Log\r\n");
 
@@ -337,15 +337,15 @@ void __aeabi_assert (const char *expr, const char *file, int line)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  if(htim == &htim14)
-  {
-    HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
-    HAL_GPIO_TogglePin(SSEL_GPIO_Port,SSEL_Pin);
-  }
-  else if (htim == &htim2)
-  {
-    HAL_GPIO_TogglePin(PA0_GPIO_Port,PA0_Pin);
-  }
+//  if(htim == &htim14)
+//  {
+//    HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
+//    HAL_GPIO_TogglePin(SSEL_GPIO_Port,SSEL_Pin);
+//  }
+//  else if (htim == &htim2)
+//  {
+//    HAL_GPIO_TogglePin(PA0_GPIO_Port,PA0_Pin);
+//  }
 
 }
 
@@ -367,6 +367,28 @@ void timer_test1(void)
   
 }
 
+ 
+void timer_test_pwm(void)
+{
+
+  __HAL_TIM_SetAutoreload(&htim2,100-1);
+  __HAL_TIM_PRESCALER(&htim2,((64000000/1000)/100)+1);
+  __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1,40);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+  
+  while(1)
+  {
+      HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
+		  HAL_Delay(10);
+      __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1,40);
+      HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
+		  HAL_Delay(10);
+      __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1,80);
+
+  }
+  
+}
+
 void myapp(void)
 {
   printf("Start App\r\n");
@@ -380,5 +402,6 @@ void myapp(void)
   
   //test_read_eeprom();
   //test_modbus_slave();
-  timer_test1();
+  //timer_test1();
+  timer_test_pwm();
 }
