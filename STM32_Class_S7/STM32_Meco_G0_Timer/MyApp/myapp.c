@@ -389,6 +389,96 @@ void timer_test_pwm(void)
   
 }
 
+
+//  int map_degree_to_priod(int degree)
+//  {
+//    
+////servo's angle range in Degrees
+//#define Angle_Range 				180
+//// Minimum pulse width in microsecends that corresponds to servo's 0 degree postion
+//#define Min_Pulse_Width 		550		
+//// Maxmum pulse width in microsecends that corresponds to servo's 180 degree postion
+//#define Max_Pulse_Width 		2800	
+//// Range of pulse width in microsecends that corresponds to servo's angle range
+//#define Pulse_Width_Range 	(Max_Pulse_Width -  Min_Pulse_Width)
+////Appropriate PWM wave period in microsecends
+//#define PWM_period					2000
+
+//    
+//    int Pulse_Width = ((((( (float) degree / Angle_Range) * Pulse_Width_Range) + Min_Pulse_Width) / PWM_period) * 2000);
+
+//    return Pulse_Width;
+//  }
+  
+  
+  
+  // ???? map ???? ????? ????? ?? ????
+uint16_t Servo_AngleToPulse(int16_t angle)
+{
+    // ????? ???? ????? ?? ???? -90 ?? +90
+    if(angle < -90) angle = -90;
+    if(angle >  90) angle =  90;
+
+    // ????? -90 ???? -> 1000us
+    // ?????  90 ???? -> 2000us
+    // ????? ???:
+    // pulse = 1500 + (angle * (500 / 90))
+    
+    uint16_t pulse = 1500 + ((int32_t)angle * 500) / 90;
+
+    return pulse/10; // ????? ?? ??? ??????????
+}
+
+
+  
+  int v1  =0;
+  int v2  =0;
+  int v3  =0;
+  int v4  =0;
+  int v5  =0;
+  
+
+void timer_test_servo(void)
+{
+
+  __HAL_TIM_SetAutoreload(&htim2,2000-1);
+  __HAL_TIM_PRESCALER(&htim2,((64000000/50)/2000)+1);
+  __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1,200);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+  
+//  100   --  200
+//  -90   --  90
+  
+
+  
+  while(1)
+  {
+    
+    v1 = Servo_AngleToPulse(-90);
+  __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1,v1);
+  HAL_Delay(2000);
+v2 = Servo_AngleToPulse(-45);
+    __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1,v2);
+  HAL_Delay(2000);
+
+v3 = Servo_AngleToPulse(0);
+    __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1,v3);
+  HAL_Delay(2000);
+
+v4 = Servo_AngleToPulse(45);
+    __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1,v4);
+  HAL_Delay(2000);
+
+v5 = Servo_AngleToPulse(90);
+  __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1,v5);
+  HAL_Delay(2000);
+    
+      HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
+		  HAL_Delay(10);
+  }
+  
+}
+
 void myapp(void)
 {
   printf("Start App\r\n");
@@ -403,5 +493,6 @@ void myapp(void)
   //test_read_eeprom();
   //test_modbus_slave();
   //timer_test1();
-  timer_test_pwm();
+  //timer_test_pwm();
+  timer_test_servo();
 }
