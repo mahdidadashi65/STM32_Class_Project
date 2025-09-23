@@ -449,7 +449,6 @@ void timer_test_servo(void)
 //  100   --  200
 //  -90   --  90
   
-
   
   while(1)
   {
