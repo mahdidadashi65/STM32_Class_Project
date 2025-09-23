@@ -106,6 +106,37 @@ void test_adc(void)
 
 
 
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
+{
+  int adc_voltage_mv = 0;
+  int adc_val = 0;
+  /* Get the converted value of regular channel */
+  adc_val = HAL_ADC_GetValue(AdcHandle);
+  adc_voltage_mv = map(adc_val, 0, 4095, 0, 3300);
+  printf("adc_voltage_mv:%d mV\r\n",adc_voltage_mv);
+}
+
+void test_adc_int(void)
+{
+
+  
+  while (1)
+  {
+    
+    HAL_GPIO_TogglePin(LED_G_GPIO_Port,LED_G_Pin);
+    HAL_Delay(1000);
+    
+      /*##-3- Start the conversion process and enable interrupt ##################*/  
+    if(HAL_ADC_Start_IT(&hadc1) != HAL_OK)
+    {
+      /* Start Conversation Error */
+      Error_Handler();
+    }
+  
+
+    
+  }
+}
 
 
 void MyApp(void)
@@ -114,6 +145,7 @@ void MyApp(void)
   //test_led();
   //test_uart();
   //test_printf();
-  test_adc();
+  //test_adc();
+  test_adc_int();
   
 }
