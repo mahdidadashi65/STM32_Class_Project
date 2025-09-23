@@ -3,7 +3,7 @@
 #include "usart.h"
 #include "adc.h"
 #include "stdio.h"
-
+#include "stdbool.h"
 
 #ifdef __GNUC__
   /* With GCC, small printf (option LD Linker->Libraries->Small printf
@@ -106,15 +106,18 @@ void test_adc(void)
 
 
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
-{
-  int adc_voltage_mv = 0;
-  int adc_val = 0;
-  /* Get the converted value of regular channel */
-  adc_val = HAL_ADC_GetValue(AdcHandle);
-  adc_voltage_mv = map(adc_val, 0, 4095, 0, 3300);
-  printf("adc_voltage_mv:%d mV\r\n",adc_voltage_mv);
-}
+//void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
+//{
+//  int adc_voltage_mv = 0;
+//  int adc_val = 0;
+//  /* Get the converted value of regular channel */
+//  adc_val = HAL_ADC_GetValue(AdcHandle);
+//  adc_voltage_mv = map(adc_val, 0, 4095, 0, 3300);
+//  printf("adc_voltage_mv:%d mV\r\n",adc_voltage_mv);
+//}
+
+
+
 
 void test_adc_int(void)
 {
@@ -138,7 +141,47 @@ void test_adc_int(void)
   }
 }
 
+uint16_t uhADCxConvertedValue[10000] = {0};
 
+bool adc_convert_status=false;
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
+{
+  HAL_GPIO_TogglePin(LOGIC_GPIO_Port,LOGIC_Pin);
+  adc_convert_status =  true;
+}
+
+void test_adc_dma(void)
+{
+ int adc_voltage_mv = 0;
+  
+
+  
+  while (1)
+  {
+    
+    HAL_GPIO_TogglePin(LED_G_GPIO_Port,LED_G_Pin);
+    HAL_Delay(1000);
+   
+        /*##-3- Start the conversion process and enable interrupt ##################*/
+  /* Note: Considering IT occurring after each number of ADC conversions      */
+  /*       (IT by DMA end of transfer), select sampling time and ADC clock    */
+  /*       with sufficient duration to not create an overhead situation in    */
+  /*        IRQHandler. */ 
+    adc_convert_status=false;
+    HAL_GPIO_TogglePin(LOGIC_GPIO_Port,LOGIC_Pin);
+
+  if(HAL_ADC_Start_DMA(&hadc1, (uint32_t*)uhADCxConvertedValue, 10000) != HAL_OK)
+  {
+    /* Start Conversation Error */
+    Error_Handler(); 
+  }
+  
+    adc_voltage_mv = map(uhADCxConvertedValue[0], 0, 4095, 0, 3300);
+    printf("adc_voltage_mv:%d mV\r\n",adc_voltage_mv);
+
+  }
+}
 void MyApp(void)
 {
    
@@ -146,6 +189,7 @@ void MyApp(void)
   //test_uart();
   //test_printf();
   //test_adc();
-  test_adc_int();
+  //test_adc_int();
+  test_adc_dma();
   
 }
