@@ -59,10 +59,14 @@ void test_printf(void)
   }
 }
 
+long map(long x, long in_min, long in_max, long out_min, long out_max) 
+{ 
+    return (x - in_min) * (out_max - out_min + 1) / (in_max - in_min + 1) + out_min;
+}
 
 void test_adc(void)
 {
-  int adc_voltage = 0;
+  int adc_voltage_mv = 0;
   int adc_val = 0;
   
   while (1)
@@ -94,11 +98,15 @@ void test_adc(void)
       adc_val = HAL_ADC_GetValue(&hadc1);
     }
   
-    
-    printf("adc_val:%d mV\r\n",adc_val);
+    adc_voltage_mv = map(adc_val, 0, 4095, 0, 3300);
+    printf("adc_voltage_mv:%d mV\r\n",adc_voltage_mv);
     
   }
 }
+
+
+
+
 
 void MyApp(void)
 {
