@@ -57,6 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define TM1638_STB_Pin GPIO_PIN_5
+#define TM1638_STB_GPIO_Port GPIOC
 #define LED_B_Pin GPIO_PIN_7
 #define LED_B_GPIO_Port GPIOE
 #define LED_R_Pin GPIO_PIN_8

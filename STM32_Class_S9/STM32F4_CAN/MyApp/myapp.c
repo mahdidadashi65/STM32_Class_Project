@@ -6,7 +6,7 @@
 #include "stdio.h"
 #include "stdbool.h"
 #include "can.h"
-
+#include "LED_KEY_TM1638.h"
 
 
 #ifdef __GNUC__
@@ -361,6 +361,79 @@ void test_can(void)
   
 }
 
+
+uint8_t keyPressed;
+
+void test_tm1638(void)
+{
+  
+	TM1638_init(0);
+	TM1638_Clear_All();
+
+	HAL_Delay (500);
+
+	for( uint8_t i = 1; i <= 8; i++)
+  {		
+		TM1638_Led_OnOff( i, LED_ON );		
+		HAL_Delay (200);
+	}
+
+	for( uint8_t i = 1; i <= 8; i++)
+  {
+		TM1638_Led_OnOff( i, LED_OFF );	
+		HAL_Delay (200);
+	}
+
+	TM1638_sendOneDigit(1, 8, 0);
+
+	HAL_Delay (2000);
+	
+	TM1638_Clear_SevenSegment();
+	
+	TM1638_sendNumber("-2435.67");
+	
+	HAL_Delay (2000);
+	TM1638_Clear_SevenSegment();
+	
+
+	for( int32_t i = 0; i < 10; i++ )
+  {		
+		TM1638_Led_OnOff( 1, LED_ON );	
+		TM1638_Clear_SevenSegment();
+		TM1638_sendNumberInt( i );
+		HAL_Delay (500);
+		TM1638_Led_OnOff( 1, LED_OFF );
+		HAL_Delay (500);		
+	}
+
+	HAL_Delay (2000);
+	TM1638_Clear_SevenSegment();
+  
+  while(1)
+  {
+    keyPressed = TM1638_readKey();
+    uint8_t num_key = 1;
+
+    for( uint8_t i = 1; i <= 8; i++)
+    {
+      
+      if( keyPressed & num_key )
+      {
+        TM1638_Led_OnOff( i, LED_ON );
+      }
+      else
+      {
+        TM1638_Led_OnOff( i, LED_OFF );
+      }
+      
+      num_key = num_key << 1;
+    }
+    
+    TM1638_sendNumberInt( HAL_GetTick() / 1000 );
+  }
+  
+}
+
 void MyApp(void)
 {
    
@@ -371,6 +444,7 @@ void MyApp(void)
   //test_adc_int();
   //test_adc_dma();
   //test_adc_pwm();
-  test_can();
+  //test_can();
+  test_tm1638();
   
 }
